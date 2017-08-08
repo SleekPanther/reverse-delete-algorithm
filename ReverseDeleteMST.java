@@ -24,30 +24,29 @@ class Edge implements Comparable<Edge>{
 
 public class ReverseDeleteMST {
 	public static void findMST(ArrayList<Edge> graph, int vertexCount){
-		System.out.println(graph);
 		Collections.sort(graph);		//sort by largest weight edges 1st
-		System.out.println(graph);
 
 		int mstWeight = 0;
-		ArrayList<Edge> mst = new ArrayList<Edge>();
+		ArrayList<Edge> mst = new ArrayList<Edge>();	//Algorithm deletes edges and adds them to this edge list which contains the Minimum Spanning Tree
 
+		//Convert the undirected edge list to an undirected adjacency list for BFS to work
 		ArrayList<ArrayList<Integer>> adjacencyGraph = new ArrayList<ArrayList<Integer>>();
-		for(int i=0; i<vertexCount; i++){		//Add placeholders for each vertex
+		//Add placeholders for each vertex
+		for(int i=0; i<vertexCount; i++){
 			adjacencyGraph.add(new ArrayList<Integer>());
 		}
+		//Add each existing edge (add twice since undirected graph)
 		for(Edge edge : graph){
 			adjacencyGraph.get(edge.vertex1).add(edge.vertex2);
 			adjacencyGraph.get(edge.vertex2).add(edge.vertex1);
 		}
 
 		for(Edge edge : graph){
-		int v1=edge.vertex1;
-		int v2 = edge.vertex2;
+			//Delete the heavest edge and all references to it
 			adjacencyGraph.get(edge.vertex1).removeIf(v -> v==edge.vertex2);
 			adjacencyGraph.get(edge.vertex2).removeIf(v -> v==edge.vertex1);
-			
-			int x=9;
 
+			//If deleting the edge disconnects the graph, add the edge back an add to MST
 			if(!ReverseDeleteMST.isConnected(adjacencyGraph)){
 				adjacencyGraph.get(edge.vertex1).add(edge.vertex2);
 				adjacencyGraph.get(edge.vertex2).add(edge.vertex1);
@@ -56,7 +55,7 @@ public class ReverseDeleteMST {
 			}
 		}
 
-		System.out.println("Minimum Spanning Tree (weight)=" +mstWeight);
+		System.out.println("Minimum Spanning Tree (weight=" +mstWeight+")");
 		for(Edge edge: mst){
 			System.out.println(edge);
 		}
