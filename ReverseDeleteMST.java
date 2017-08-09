@@ -31,22 +31,21 @@ public class ReverseDeleteMST {
 
 		//Convert the undirected edge list to an undirected adjacency list for BFS to work
 		ArrayList<ArrayList<Integer>> adjacencyGraph = new ArrayList<ArrayList<Integer>>();
-		//Add placeholders for each vertex
-		for(int i=0; i<vertexCount; i++){
+		for(int i=0; i<vertexCount; i++){		//Add placeholders for each vertex
 			adjacencyGraph.add(new ArrayList<Integer>());
 		}
-		//Add each existing edge (add twice since undirected graph)
+		//Add existing edges (add twice since undirected graph)
 		for(Edge edge : graph){
 			adjacencyGraph.get(edge.vertex1).add(edge.vertex2);
 			adjacencyGraph.get(edge.vertex2).add(edge.vertex1);
 		}
 
 		for(Edge edge : graph){
-			//Delete the heavest edge and all references to it
+			//Delete the heaviest edge and all references to it in the adjacency matrix
 			adjacencyGraph.get(edge.vertex1).removeIf(v -> v==edge.vertex2);
 			adjacencyGraph.get(edge.vertex2).removeIf(v -> v==edge.vertex1);
 
-			//If deleting the edge disconnects the graph, add the edge back an add to MST
+			//If deleting the edge disconnects the graph, add the edge back and add to MST
 			if(!ReverseDeleteMST.isConnected(adjacencyGraph)){
 				adjacencyGraph.get(edge.vertex1).add(edge.vertex2);
 				adjacencyGraph.get(edge.vertex2).add(edge.vertex1);
